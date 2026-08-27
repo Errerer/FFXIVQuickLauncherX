@@ -69,18 +69,10 @@
                                  materialDesign:HintAssist.Hint="例如 127.0.0.1"
                                  Style="{StaticResource MaterialDesignOutlinedTextBox}" />
 
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock Text="代理端口" Foreground="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
-                                <xctk:IntegerUpDown Margin="0,4,0,16" Width="140" Minimum="1" Maximum="65535"
-                                                    Value="{Binding ProxyPort}"
-                                                    Padding="4" />
-                            </StackPanel>
-                        </Grid>
+                        <TextBlock Text="代理端口" Foreground="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
+                        <xctk:IntegerUpDown Margin="0,4,0,16" Width="140" Minimum="1" Maximum="65535"
+                                            Value="{Binding ProxyPort}"
+                                            Padding="4" />
 
                         <TextBlock Text="用户名（可选）" Foreground="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
                         <TextBox Margin="0,4,0,16" Text="{Binding ProxyUsername, UpdateSourceTrigger=PropertyChanged}"
