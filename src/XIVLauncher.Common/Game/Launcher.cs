@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using Serilog;
 using XIVLauncher.Common.Constant;
 using XIVLauncher.Common.Game.Exceptions;
+using XIVLauncher.Common.Http;
 using XIVLauncher.Common.Util;
 
 namespace XIVLauncher.Common.Game;
@@ -9,7 +10,7 @@ namespace XIVLauncher.Common.Game;
 public partial class Launcher
 {
     public RestartMonitor RestartMonitor { get; } = new();
-    public HttpClient     MockHttpClient { get; } = new(new HttpClientHandler { UseCookies = true });
+    public HttpClient     MockHttpClient { get; } = new(new HttpClientHandler { UseCookies = true, Proxy = XLProxyProvider.Current });
 
     public FFXIVProcess? LaunchGame
     (
