@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Serilog;
 using XIVLauncher.Common.Constant;
@@ -9,12 +10,14 @@ namespace XIVLauncher.Common.Game;
 
 public partial class Launcher
 {
+    public delegate Process? GameStarter(GameStartRequest request);
+
     public RestartMonitor RestartMonitor { get; } = new();
     public HttpClient     MockHttpClient { get; } = new(new HttpClientHandler { UseCookies = true, Proxy = XLProxyProvider.Current });
 
     public FFXIVProcess? LaunchGame
     (
-        IGameRunner   runner,
+        GameStarter   startGame,
         string        sessionID,
         string        sndaID,
         int           dcTravelPort,
@@ -62,7 +65,7 @@ public partial class Launcher
                             ? argumentBuilder.BuildEncrypted()
                             : argumentBuilder.Build();
 
-        var process = runner.Start(exePath, workingDir, arguments, environment, dpiAwareness);
+        var process = startGame(new GameStartRequest(exePath, workingDir, arguments, environment, dpiAwareness));
         return process != null ? new FFXIVProcess(process) : null;
     }
 
