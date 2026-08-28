@@ -25,6 +25,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Xaml/Components/WindowAnimations.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ThemeComboBoxStyle" TargetType="ComboBox"
+                   BasedOn="{StaticResource MaterialDesignComboBox}">
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Foreground}" />
+                <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush"
+                        Value="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
 
