@@ -8,7 +8,7 @@
     xmlns:viewModel="clr-namespace:XIVLauncher.Windows.ViewModel"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     Title="代理配置"
-    Width="620"
+    Width="640"
     ResizeMode="NoResize"
     SizeToContent="Height"
     WindowStartupLocation="CenterOwner"
@@ -25,12 +25,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Xaml/Components/WindowAnimations.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="ThemeComboBoxStyle" TargetType="ComboBox"
-                   BasedOn="{StaticResource MaterialDesignComboBox}">
-                <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Foreground}" />
-                <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush"
-                        Value="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
-            </Style>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -52,7 +46,7 @@
 
             <StackPanel Grid.Row="0" Margin="24,24,24,16">
                 <!-- Header -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,24" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20" VerticalAlignment="Center">
                     <materialDesign:PackIcon Kind="Network" Width="36" Height="36" VerticalAlignment="Center"
                                              Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
                                              Margin="0,0,16,0" />
@@ -60,28 +54,91 @@
                                Text="网络代理" VerticalAlignment="Center" FontWeight="SemiBold" />
                 </StackPanel>
 
-                <!-- Proxy Settings Card -->
+                <!-- Card 1: 代理配置条目 -->
                 <materialDesign:Card Margin="0,0,0,16" UniformCornerRadius="8">
                     <StackPanel Margin="20">
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="FormatListBulleted" VerticalAlignment="Center"
+                                                         Margin="0,0,8,0"
+                                                         Foreground="{DynamicResource MaterialDesign.Brush.Primary}" />
+                                <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           FontWeight="SemiBold" Text="代理配置条目" VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Style="{StaticResource MaterialDesignOutlinedButton}" Margin="0,0,12,0"
+                                        Click="CreateProfileButton_OnClick">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Plus" Width="16" Height="16"
+                                                                 VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock Text="新增" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                                        Click="DeleteProfileButton_OnClick">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="DeleteOutline" Width="16" Height="16"
+                                                                 VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <TextBlock Text="删除" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox Grid.Column="0"
+                                      materialDesign:HintAssist.Hint="选择代理条目"
+                                      Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                      DisplayMemberPath="DisplayName"
+                                      ItemsSource="{Binding SelectionItems}"
+                                      SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <TextBox Grid.Column="2"
+                                     materialDesign:HintAssist.Hint="显示名称"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                     IsEnabled="{Binding HasSelectedProfile}"
+                                     Text="{Binding SelectedProfile.Name, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Card 2: 代理详情 -->
+                <materialDesign:Card Margin="0,0,0,16" UniformCornerRadius="8">
+                    <StackPanel Margin="20" IsEnabled="{Binding HasSelectedProfile}">
                         <TextBlock Text="代理类型" Foreground="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
                         <ComboBox Margin="0,4,0,16" Width="240" HorizontalAlignment="Left"
                                   DisplayMemberPath="Display"
                                   ItemsSource="{Binding ProxyTypeOptions}"
-                                  SelectedItem="{Binding SelectedProxyTypeOption}"
-                                  Style="{StaticResource ThemeComboBoxStyle}" />
+                                  SelectedValue="{Binding SelectedProfile.ProxyType, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValuePath="Type"
+                                  Style="{StaticResource MaterialDesignOutlinedComboBox}" />
 
                         <TextBlock Text="代理主机" Foreground="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
-                        <TextBox Margin="0,4,0,16" Text="{Binding ProxyHost, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Margin="0,4,0,16"
+                                 Text="{Binding SelectedProfile.ProxyHost, UpdateSourceTrigger=PropertyChanged}"
                                  materialDesign:HintAssist.Hint="例如 127.0.0.1"
                                  Style="{StaticResource MaterialDesignOutlinedTextBox}" />
 
                         <TextBlock Text="代理端口" Foreground="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
                         <xctk:IntegerUpDown Margin="0,4,0,16" Width="140" Minimum="1" Maximum="65535"
-                                            Value="{Binding ProxyPort}"
+                                            Value="{Binding SelectedProfile.ProxyPort, UpdateSourceTrigger=PropertyChanged}"
                                             Padding="4" />
 
                         <TextBlock Text="用户名（可选）" Foreground="{DynamicResource MaterialDesign.Brush.ForegroundLight}" />
-                        <TextBox Margin="0,4,0,16" Text="{Binding ProxyUsername, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Margin="0,4,0,16"
+                                 Text="{Binding SelectedProfile.ProxyUsername, UpdateSourceTrigger=PropertyChanged}"
                                  materialDesign:HintAssist.Hint="代理认证用户名，无认证可留空"
                                  Style="{StaticResource MaterialDesignOutlinedTextBox}" />
 

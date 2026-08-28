@@ -19,6 +19,28 @@ public partial class ProxySettingsWindow
         DataContext   = new ProxySettingsWindowViewModel(settings);
     }
 
+    private void CreateProfileButton_OnClick(object sender, RoutedEventArgs e) =>
+        ViewModel.CreateProfile();
+
+    private void DeleteProfileButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var profile = ViewModel.SelectedProfile;
+        if (profile == null)
+            return;
+
+        if (CustomMessageBox.Show
+            (
+                $"确定删除代理配置“{profile.DisplayName}”吗？",
+                "代理配置",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                parentWindow: this
+            ) != MessageBoxResult.Yes)
+            return;
+
+        ViewModel.DeleteSelectedProfile();
+    }
+
     private void ConfirmButton_OnClick(object sender, RoutedEventArgs e)
     {
         try
